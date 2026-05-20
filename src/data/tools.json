@@ -147,6 +147,7 @@
     "rating": 4.7,
     "isFeatured": false,
     "isPremium": false,
+    "videoUrl": "/videos/cursor_review.mp4",
     "features": ["AI 驱动编辑器", "代码补全", "智能重构", "多文件编辑", "终端集成"],
     "reviewSummary": "Cursor 重新定义了编程体验，AI 能力的深度集成让开发效率倍增。"
   },
@@ -237,6 +238,7 @@
     "rating": 4.8,
     "isFeatured": true,
     "isPremium": false,
+    "videoUrl": "/videos/deepseek_review.mp4",
     "features": ["深度推理", "数学能力", "代码生成", "长文本处理", "开源模型"],
     "reviewSummary": "DeepSeek 以强大的推理能力著称，在数学和编程任务上表现惊艳，完全免费是最大优势。"
   },
