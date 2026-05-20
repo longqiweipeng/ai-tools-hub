@@ -5,13 +5,13 @@ import { getPriceLabel } from '../../lib/utils';
 import tools from '../../data/tools.json';
 
 export async function getStaticPaths() {
-  return tools.map((tool) => ({
+  return tools.map((tool, index) => ({
     params: { slug: tool.slug },
-    props: { tool },
+    props: { tool, toolId: index },
   }));
 }
 
-const { tool } = Astro.props;
+const { tool, toolId } = Astro.props;
 const categoryInfo = CATEGORIES.find(c => c.id === tool.category);
 const relatedTools = tools
   .filter(t => t.category === tool.category && t.slug !== tool.slug)
@@ -66,6 +66,14 @@ const relatedTools = tools
             <a href={tool.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
               访问官网
             </a>
+            <button
+              id="fav-btn"
+              data-tool-id={toolId}
+              class="btn btn-outline btn-lg"
+              onclick="toggleFavorite(this)"
+            >
+              <span id="fav-icon">🤍</span>
+            </button>
           </div>
 
           <!-- 信息标签 -->
@@ -160,3 +168,85 @@ const relatedTools = tools
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  var SB_URL = 'https://qnqsqdzjljqibteqobhf.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFucXNxZHpqbGpxaWJ0ZXFvYmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNzA0OTEsImV4cCI6MjA5NDg0NjQ5MX0.cmi25_P0sHKZyDbrGajs7cib2Iq5bRIg2ejX9mhsL6k';
+
+  var _supabase;
+
+  function getSupabase() {
+    if (!_supabase) {
+      _supabase = window.supabase
+        ? window.supabase.createClient(SB_URL, SB_KEY)
+        : null;
+    }
+    return _supabase;
+  }
+
+  function getToolId() {
+    var btn = document.getElementById('fav-btn');
+    return btn ? parseInt(btn.getAttribute('data-tool-id'), 10) : -1;
+  }
+
+  async function checkFavorite() {
+    var sb = getSupabase();
+    if (!sb) return;
+    var result = await sb.auth.getUser();
+    if (!result.data?.user) return;
+
+    var tid = getToolId();
+    if (tid < 0) return;
+
+    var fav = await sb.from('favorites').select('tool_id').eq('user_id', result.data.user.id).eq('tool_id', tid).maybeSingle();
+    var icon = document.getElementById('fav-icon');
+    if (icon) icon.textContent = fav.data ? '❤️' : '🤍';
+  }
+
+  async function toggleFavorite(btn) {
+    var sb = getSupabase();
+    if (!sb) {
+      window.location.href = '/login';
+      return;
+    }
+
+    var result = await sb.auth.getUser();
+    if (!result.data?.user) {
+      window.location.href = '/login';
+      return;
+    }
+
+    var tid = getToolId();
+    if (tid < 0) return;
+
+    var existing = await sb.from('favorites').select('tool_id').eq('user_id', result.data.user.id).eq('tool_id', tid).maybeSingle();
+    var icon = document.getElementById('fav-icon');
+    var anyBtn = document.getElementById('fav-btn');
+
+    if (existing.data) {
+      await sb.from('favorites').delete().eq('user_id', result.data.user.id).eq('tool_id', tid);
+      if (icon) icon.textContent = '🤍';
+      if (anyBtn) anyBtn.setAttribute('class', 'btn btn-outline btn-lg');
+    } else {
+      await sb.from('favorites').insert({ user_id: result.data.user.id, tool_id: tid });
+      if (icon) icon.textContent = '❤️';
+      if (anyBtn) anyBtn.setAttribute('class', 'btn btn-primary btn-lg');
+    }
+  }
+
+  window.toggleFavorite = toggleFavorite;
+
+  // Load supabase from CDN if not already loaded
+  if (!window.supabase) {
+    var s = document.createElement('script');
+    s.src = SB_URL + '/supabase.js';
+    s.onload = function () {
+      _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+      checkFavorite();
+    };
+    document.head.appendChild(s);
+  } else {
+    _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    checkFavorite();
+  }
+</script>
