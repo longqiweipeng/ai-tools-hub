@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { CATEGORIES } from '../../lib/config';
 import { getPriceLabel } from '../../lib/utils';
+import VideoEmbed from '../../components/VideoEmbed.astro';
 import tools from '../../data/tools.json';
 
 export async function getStaticPaths() {
@@ -52,6 +53,12 @@ const relatedTools = tools
           </div>
 
           <p class="text-base mb-6">{tool.description}</p>
+
+          <!-- 评测视频 -->
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-3">🎬 评测视频</h2>
+            <VideoEmbed slug={tool.name} videoUrl={tool.videoUrl} />
+          </div>
 
           <!-- 操作按钮 -->
           <div class="flex flex-wrap gap-3 mb-6">

@@ -1,0 +1,30 @@
+---
+interface Props {
+  slug: string;
+  videoUrl?: string;
+}
+
+const { slug, videoUrl } = Astro.props;
+const hasVideo = videoUrl && videoUrl.length > 0;
+---
+
+<div class="card bg-base-100 shadow-md overflow-hidden">
+  {hasVideo ? (
+    <video
+      class="w-full aspect-video"
+      controls
+      poster={`/videos/${slug}_poster.jpg`}
+    >
+      <source src={videoUrl} type="video/mp4" />
+    </video>
+  ) : (
+    <div class="aspect-video bg-gradient-to-br from-base-300 to-base-200 flex flex-col items-center justify-center text-center p-8">
+      <div class="text-5xl mb-4">🎬</div>
+      <h3 class="text-lg font-semibold mb-2">评测视频即将上线</h3>
+      <p class="text-sm opacity-60 max-w-md">
+        我们正在为这个工具制作评测视频，很快会在这里展示。
+        订阅以获取更新通知。
+      </p>
+    </div>
+  )}
+</div>

@@ -11,6 +11,7 @@
     "rating": 4.8,
     "isFeatured": true,
     "isPremium": false,
+    "videoUrl": "/videos/chatgpt_review.mp4",
     "features": ["对话式交互", "多语言支持", "代码生成", "文件分析", "DALL-E 集成"],
     "reviewSummary": "ChatGPT 是目前最成熟的通用 AI 助手，覆盖场景广泛，免费版即可满足日常需求。"
   },
