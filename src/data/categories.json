@@ -1,9 +1,9 @@
 [
-  { "id": "text", "name": "文本生成", "icon": "📝", "count": 10 },
-  { "id": "image", "name": "图像生成", "icon": "🎨", "count": 4 },
-  { "id": "video", "name": "视频生成", "icon": "🎬", "count": 4 },
-  { "id": "code", "name": "编程助手", "icon": "💻", "count": 3 },
-  { "id": "audio", "name": "音频处理", "icon": "🎵", "count": 3 },
-  { "id": "office", "name": "办公提效", "icon": "📊", "count": 3 },
-  { "id": "design", "name": "设计创意", "icon": "✨", "count": 3 }
+  { "id": "text", "name": "文本生成", "icon": "📝", "count": 15 },
+  { "id": "image", "name": "图像生成", "icon": "🎨", "count": 6 },
+  { "id": "video", "name": "视频生成", "icon": "🎬", "count": 6 },
+  { "id": "code", "name": "编程助手", "icon": "💻", "count": 7 },
+  { "id": "audio", "name": "音频处理", "icon": "🎵", "count": 6 },
+  { "id": "office", "name": "办公提效", "icon": "📊", "count": 5 },
+  { "id": "design", "name": "设计创意", "icon": "✨", "count": 5 }
 ]
