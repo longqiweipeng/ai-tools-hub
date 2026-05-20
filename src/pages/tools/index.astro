@@ -37,26 +37,80 @@ const allTools = tools.sort((a, b) => b.rating - a.rating);
     </label>
   </div>
 
+  <!-- 对比工具栏 -->
+  <div id="compare-bar" class="sticky bottom-4 z-40 hidden">
+    <div class="card bg-base-100 shadow-xl border border-primary/20">
+      <div class="card-body p-3 flex flex-row items-center justify-between">
+        <span id="compare-count" class="text-sm font-semibold"></span>
+        <div class="flex gap-2">
+          <button id="clear-compare" class="btn btn-ghost btn-sm">清空</button>
+          <a id="compare-btn" href="/compare" class="btn btn-primary btn-sm">开始对比</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 工具网格 -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {allTools.map((tool) => (
-      <ToolCard tool={tool} />
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tools-grid">
+    {allTools.map((tool, index) => (
+      <div class="relative" data-tool-slug={tool.slug}>
+        <!-- 对比勾选框 -->
+        <label class="absolute top-2 left-2 z-10 cursor-pointer" onclick="event.stopPropagation()">
+          <input type="checkbox" class="compare-checkbox checkbox checkbox-sm checkbox-primary" data-slug={tool.slug} />
+        </label>
+        <ToolCard tool={tool} />
+      </div>
     ))}
   </div>
 </BaseLayout>
 
 <script>
+  // 搜索功能
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     searchInput.addEventListener('input', () => {
       const query = searchInput.value.toLowerCase();
-      const cards = document.querySelectorAll('[class*="card"]');
-      cards.forEach((card, i) => {
-        if (i < cards.length) {
-          const text = card.textContent?.toLowerCase() || '';
-          card.closest('.grid > div, .grid > a')?.style.setProperty('display', text.includes(query) ? '' : 'none');
-        }
+      const items = document.querySelectorAll('#tools-grid > div');
+      items.forEach((item) => {
+        const text = item.textContent?.toLowerCase() || '';
+        item.style.display = text.includes(query) ? '' : 'none';
       });
     });
   }
+
+  // 对比功能
+  var compareBar = document.getElementById('compare-bar');
+  var compareCount = document.getElementById('compare-count');
+  var compareBtn = document.getElementById('compare-btn');
+  var maxCompare = 4;
+
+  function updateCompareBar() {
+    var checked = document.querySelectorAll('.compare-checkbox:checked');
+    var count = checked.length;
+    if (count >= 2) {
+      compareBar.classList.remove('hidden');
+      compareCount.textContent = '已选择 ' + count + ' 个工具（最多 ' + maxCompare + ' 个）';
+      var slugs = [];
+      checked.forEach(function (cb) { slugs.push(cb.getAttribute('data-slug')); });
+      compareBtn.href = '/compare?tools=' + slugs.join(',');
+    } else {
+      compareBar.classList.add('hidden');
+    }
+  }
+
+  document.querySelectorAll('.compare-checkbox').forEach(function (cb) {
+    cb.addEventListener('change', function () {
+      var checked = document.querySelectorAll('.compare-checkbox:checked');
+      if (checked.length > maxCompare) {
+        this.checked = false;
+        return;
+      }
+      updateCompareBar();
+    });
+  });
+
+  document.getElementById('clear-compare')?.addEventListener('click', function () {
+    document.querySelectorAll('.compare-checkbox:checked').forEach(function (cb) { cb.checked = false; });
+    updateCompareBar();
+  });
 </script>

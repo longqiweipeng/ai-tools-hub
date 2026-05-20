@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="工具对比 - AI 工具箱">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex items-center gap-4 mb-6">
+      <a href="/tools" class="btn btn-ghost btn-sm">← 返回目录</a>
+      <h1 class="text-2xl font-bold">工具对比</h1>
+    </div>
+
+    <div id="compare-table" class="overflow-x-auto">
+      <div class="text-center py-12 opacity-60">加载中...</div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  var SB_URL = 'https://qnqsqdzjljqibteqobhf.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFucXNxZHpqbGpxaWJ0ZXFvYmhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNzA0OTEsImV4cCI6MjA5NDg0NjQ5MX0.cmi25_P0sHKZyDbrGajs7cib2Iq5bRIg2ejX9mhsL6k';
+
+  var ALL_TOOLS = [
+    {"name":"ChatGPT","slug":"chatgpt","category":"text","description":"OpenAI 开发的对话式 AI 助手，支持文本生成、代码编写、翻译等多种任务","priceInfo":"免费增值","priceModel":"freemium","rating":4.8,"features":["对话式交互","多语言支持","代码生成","文件分析","DALL-E 集成"]},
+    {"name":"Claude","slug":"claude","category":"text","description":"Anthropic 开发的 AI 助手，擅长长文本处理、深度分析和安全对话","priceInfo":"免费增值","priceModel":"freemium","rating":4.7,"features":["超长上下文","深度分析","代码能力","文件上传","安全可控"]},
+    {"name":"Midjourney","slug":"midjourney","category":"image","description":"AI 图像生成工具，以艺术风格和高质量输出著称","priceInfo":"付费","priceModel":"paid","rating":4.7,"features":["文生图","图生图","风格控制","高清输出","社区画廊"]},
+    {"name":"GitHub Copilot","slug":"github-copilot","category":"code","description":"AI 编程助手，支持多种 IDE，提供代码补全和生成功能","priceInfo":"付费","priceModel":"paid","rating":4.6,"features":["代码补全","多语言支持","IDE 集成","聊天助手","代码审查"]},
+    {"name":"通义千问","slug":"tongyi-qianwen","category":"text","description":"阿里巴巴开发的 AI 大模型，支持文本生成、文档处理等多种功能","priceInfo":"免费","priceModel":"free","rating":4.5,"features":["文本生成","文档处理","多轮对话","插件生态","中文优化"]},
+    {"name":"Runway","slug":"runway","category":"video","description":"AI 视频生成和编辑平台，支持文生视频、视频修复等功能","priceInfo":"免费增值","priceModel":"freemium","rating":4.5,"features":["文生视频","视频修复","背景移除","运动追踪","实时编辑"]},
+    {"name":"Notion AI","slug":"notion-ai","category":"office","description":"集成 AI 能力的笔记和协作平台，支持智能写作和知识管理","priceInfo":"付费","priceModel":"paid","rating":4.4,"features":["智能写作","知识管理","团队协作","数据库","模板库"]},
+    {"name":"Stable Diffusion","slug":"stable-diffusion","category":"image","description":"开源 AI 图像生成模型，可本地部署，高度可定制","priceInfo":"免费","priceModel":"free","rating":4.6,"features":["开源免费","本地部署","模型微调","社区生态","ControlNet"]},
+    {"name":"Gamma","slug":"gamma","category":"office","description":"AI PPT 生成工具，只需输入主题即可自动生成精美演示文稿","priceInfo":"免费增值","priceModel":"freemium","rating":4.3,"features":["AI 生成 PPT","多种模板","在线编辑","团队协作","嵌入多媒体"]},
+    {"name":"Cursor","slug":"cursor","category":"code","description":"AI-first 代码编辑器，深度集成 AI 编程能力","priceInfo":"免费增值","priceModel":"freemium","rating":4.7,"features":["AI 驱动编辑器","代码补全","智能重构","多文件编辑","终端集成"]},
+    {"name":"剪映","slug":"jianying","category":"video","description":"字节跳动开发的视频编辑工具，集成 AI 剪辑、字幕生成等功能","priceInfo":"免费","priceModel":"free","rating":4.5,"features":["AI 剪辑","自动字幕","特效模板","音频分离","一键成片"]},
+    {"name":"Perplexity","slug":"perplexity","category":"text","description":"AI 搜索引擎，实时联网获取信息并提供带引用的回答","priceInfo":"免费增值","priceModel":"freemium","rating":4.5,"features":["实时搜索","引用来源","深度研究","文件分析","Pro 搜索"]},
+    {"name":"Canva","slug":"canva","category":"design","description":"在线设计平台，集成 AI 设计功能，轻松创建各类视觉内容","priceInfo":"免费增值","priceModel":"freemium","rating":4.4,"features":["AI 设计","海量模板","协作设计","品牌工具箱","素材库"]},
+    {"name":"Suno","slug":"suno","category":"audio","description":"AI 音乐生成工具，输入文字描述即可生成完整歌曲","priceInfo":"免费增值","priceModel":"freemium","rating":4.6,"features":["文生音乐","多种风格","歌词生成","歌曲翻唱","音乐扩展"]},
+    {"name":"Kimi","slug":"kimi","category":"text","description":"月之暗面推出的中文 AI 助手，擅长长文本理解和分析","priceInfo":"免费","priceModel":"free","rating":4.5,"features":["超长文本","多文件上传","联网搜索","中文优化","数据处理"]},
+    {"name":"DeepSeek","slug":"deepseek","category":"text","description":"深度求索推出的 AI 大模型，推理能力强悍","priceInfo":"免费","priceModel":"free","rating":4.8,"features":["深度推理","数学能力","代码生成","长文本处理","开源模型"]},
+    {"name":"文心一言","slug":"wenxin-yiyan","category":"text","description":"百度推出的 AI 大模型，中文理解能力优秀","priceInfo":"免费","priceModel":"free","rating":4.2,"features":["中文理解","百度生态","多模态","插件系统","企业服务"]},
+    {"name":"Gemini","slug":"gemini","category":"text","description":"Google 开发的 AI 大模型，与 Google 生态深度集成","priceInfo":"免费","priceModel":"free","rating":4.4,"features":["多模态理解","Google 集成","实时信息","长上下文","多语言"]},
+    {"name":"DALL-E 3","slug":"dalle-3","category":"image","description":"OpenAI 开发的图像生成模型，文字理解能力强","priceInfo":"付费","priceModel":"paid","rating":4.5,"features":["文生图","高精度文字理解","风格多样","ChatGPT 集成","安全过滤"]},
+    {"name":"Leonardo AI","slug":"leonardo-ai","category":"image","description":"功能丰富的 AI 图像生成平台","priceInfo":"免费增值","priceModel":"freemium","rating":4.4,"features":["多模型库","精细控制","图像编辑","视频生成","训练自定义模型"]},
+    {"name":"Pika","slug":"pika","category":"video","description":"AI 视频生成平台，支持文生视频和图生视频","priceInfo":"免费增值","priceModel":"freemium","rating":4.3,"features":["文生视频","图生视频","视频编辑","风格控制","免费额度"]},
+    {"name":"Sora","slug":"sora","category":"video","description":"OpenAI 推出的 AI 视频生成模型","priceInfo":"付费","priceModel":"paid","rating":4.6,"features":["高清视频生成","长时长","物理模拟","多镜头","真实风格"]},
+    {"name":"Windsurf","slug":"windsurf","category":"code","description":"AI 驱动的 IDE，提供智能代码补全和重构功能","priceInfo":"免费增值","priceModel":"freemium","rating":4.5,"features":["AI 代码补全","多语言","IDE 集成","团队协作","代码搜索"]},
+    {"name":"ElevenLabs","slug":"elevenlabs","category":"audio","description":"AI 语音合成工具，音质自然逼真","priceInfo":"免费增值","priceModel":"freemium","rating":4.7,"features":["语音合成","声音克隆","多语言","语音转语音","有声书制作"]},
+    {"name":"讯飞听见","slug":"xunfei-tingjian","category":"audio","description":"科大讯飞推出的语音转文字和翻译工具","priceInfo":"付费","priceModel":"paid","rating":4.3,"features":["语音转文字","多语种翻译","会议记录","字幕生成","方言识别"]},
+    {"name":"WPS AI","slug":"wps-ai","category":"office","description":"金山办公推出的 AI 办公助手","priceInfo":"免费增值","priceModel":"freemium","rating":4.2,"features":["文档生成","PPT 设计","表格处理","PDF 分析","AI 写作"]},
+    {"name":"Adobe Firefly","slug":"adobe-firefly","category":"design","description":"Adobe 推出的 AI 创意工具，商用安全性高","priceInfo":"付费","priceModel":"paid","rating":4.4,"features":["文生图","生成式填充","文字特效","矢量图生成","商用安全"]},
+    {"name":"稿定设计","slug":"gaoding-design","category":"design","description":"中国本土在线设计平台，海量模板搭配 AI 功能","priceInfo":"免费增值","priceModel":"freemium","rating":4.1,"features":["海量模板","AI 抠图","智能排版","团队协作","多格式导出"]},
+    {"name":"秘塔 AI","slug":"mita-ai","category":"text","description":"中国新兴的 AI 搜索引擎，无广告、结构化搜索结果","priceInfo":"免费","priceModel":"free","rating":4.3,"features":["AI 搜索","无广告","结构化结果","深度研究","大纲生成"]},
+    {"name":"豆包","slug":"doubao","category":"text","description":"字节跳动推出的 AI 对话助手，集成在抖音生态中","priceInfo":"免费","priceModel":"free","rating":4.3,"features":["AI 对话","图像生成","抖音集成","语音交互","多端同步"]}
+  ];
+
+  var CATEGORIES = {
+    text: '文本生成', image: '图像生成', video: '视频生成',
+    code: '编程助手', audio: '音频处理', office: '办公提效', design: '设计创意'
+  };
+
+  function getPriceLabel(m) {
+    var map = { free: '免费', freemium: '免费增值', paid: '付费', usage: '按量付费' };
+    return map[m] || m;
+  }
+
+  function buildStars(rating) {
+    var h = '';
+    for (var i = 0; i < 5; i++) {
+      h += '<span class="' + (i < Math.round(rating) ? 'text-warning' : 'opacity-20') + '">★</span>';
+    }
+    return h;
+  }
+
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var slugs = params.get('tools');
+    if (!slugs) {
+      document.getElementById('compare-table').innerHTML =
+        '<div class="text-center py-12"><p class="text-lg opacity-60">请先在工具目录中选择要对比的工具</p>' +
+        '<a href="/tools" class="btn btn-primary mt-4">去选择</a></div>';
+      return;
+    }
+
+    var selected = slugs.split(',').map(function (s) { return s.trim(); });
+    var tools = [];
+    for (var i = 0; i < selected.length; i++) {
+      for (var j = 0; j < ALL_TOOLS.length; j++) {
+        if (ALL_TOOLS[j].slug === selected[i]) {
+          tools.push(ALL_TOOLS[j]);
+          break;
+        }
+      }
+    }
+
+    if (tools.length < 2) {
+      document.getElementById('compare-table').innerHTML =
+        '<div class="text-center py-12"><p class="text-lg opacity-60">请至少选择 2 个工具进行对比</p>' +
+        '<a href="/tools" class="btn btn-primary mt-4">去选择</a></div>';
+      return;
+    }
+
+    var rows = [
+      { label: '名称', key: 'name', type: 'name' },
+      { label: '评分', key: 'rating', type: 'rating' },
+      { label: '分类', key: 'category', type: 'category' },
+      { label: '价格', key: 'priceModel', type: 'price' },
+      { label: '描述', key: 'description', type: 'text' },
+    ];
+
+    // Feature rows
+    var maxFeatures = 0;
+    for (var t = 0; t < tools.length; t++) {
+      if (tools[t].features && tools[t].features.length > maxFeatures) {
+        maxFeatures = tools[t].features.length;
+      }
+    }
+
+    var html = '<div class="card bg-base-100 shadow-md">';
+    html += '<div class="overflow-x-auto"><table class="table table-zebra w-full">';
+    html += '<thead><tr><th class="w-24">项目</th>';
+
+    var toolNames = [];
+    for (var t = 0; t < tools.length; t++) {
+      toolNames.push(tools[t].name);
+      html += '<th class="text-center">' + tools[t].name + '</th>';
+    }
+    html += '</tr></thead><tbody>';
+
+    // Basic info rows
+    for (var r = 0; r < rows.length; r++) {
+      var row = rows[r];
+      html += '<tr><td class="font-semibold">' + row.label + '</td>';
+      for (var t = 0; t < tools.length; t++) {
+        var val = tools[t][row.key];
+        html += '<td class="text-center">';
+        if (row.type === 'rating') {
+          html += buildStars(val) + ' <span class="text-sm opacity-50">' + val + '</span>';
+        } else if (row.type === 'price') {
+          html += getPriceLabel(val);
+        } else if (row.type === 'category') {
+          html += CATEGORIES[val] || val;
+        } else {
+          html += val || '-';
+        }
+        html += '</td>';
+      }
+      html += '</tr>';
+    }
+
+    // Features
+    html += '<tr><td class="font-semibold align-top">功能特点</td>';
+    for (var t = 0; t < tools.length; t++) {
+      html += '<td><ul class="text-left space-y-1">';
+      var feats = tools[t].features || [];
+      for (var f = 0; f < feats.length; f++) {
+        html += '<li class="flex items-center gap-1 text-sm"><span class="text-success">&#10003;</span> ' + feats[f] + '</li>';
+      }
+      html += '</ul></td>';
+    }
+    html += '</tr>';
+
+    html += '</tbody></table></div></div>';
+
+    // Action buttons
+    html += '<div class="flex flex-wrap gap-3 mt-6 justify-center">';
+    for (var t = 0; t < tools.length; t++) {
+      html += '<a href="/tools/' + tools[t].slug + '" class="btn btn-outline btn-sm">查看 ' + tools[t].name + '</a>';
+    }
+    html += '</div>';
+
+    document.getElementById('compare-table').innerHTML = html;
+  })();
+</script>
