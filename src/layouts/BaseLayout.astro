@@ -7,18 +7,55 @@ import SearchModal from '../components/SearchModal.astro';
 export interface Props {
   title: string;
   description?: string;
+  image?: string;
+  type?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, image, type } = Astro.props;
+const safeTitle = title || '';
+const siteTitle = safeTitle.includes('AI 工具箱') ? safeTitle : `${safeTitle} | AI 工具箱`;
+const desc = description || 'AI 工具导航站 - 发现最好用的 AI 工具';
+const ogImage = image || '/og-default.png';
 ---
 
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description || 'AI 工具导航站 - 发现最好用的 AI 工具'} />
-    <title>{title} | AI 工具箱</title>
+    <meta name="description" content={desc} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content={type || 'website'} />
+    <meta property="og:site_name" content="AI 工具箱" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={desc} />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#4F46E5" />
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="AI 工具箱 - 最新文章" href="/rss.xml" />
+
+    <title>{siteTitle}</title>
+
+    <!-- JSON-LD Site Structure -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AI 工具箱",
+        "description": "发现最好用的 AI 工具，提供专业的 AI 工具评测、对比和使用教程",
+        "url": "https://ai-tools-hub-an7.pages.dev"
+      }
+    </script>
   </head>
   <body class="min-h-screen bg-base-200">
     <Header />
@@ -27,5 +64,13 @@ const { title, description } = Astro.props;
     </main>
     <Footer />
     <SearchModal />
+
+    <!-- 夜间模式初始化 -->
+    <script is:inline>
+      (function () {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+      })();
+    </script>
   </body>
 </html>
