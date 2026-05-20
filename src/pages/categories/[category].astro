@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { CATEGORIES } from '../../lib/config';
+import tools from '../../data/tools.json';
+
+export async function getStaticPaths() {
+  return CATEGORIES.filter(c => c.id !== 'other').map((cat) => ({
+    params: { category: cat.id },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const categoryTools = tools
+  .filter(t => t.category === category.id)
+  .sort((a, b) => b.rating - a.rating);
+---
+
+<BaseLayout title={`${category.name} AI 工具 - AI 工具箱`}>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">{category.icon} {category.name} 工具</h1>
+    <p class="opacity-70">{category.description}</p>
+  </div>
+
+  <!-- 其他分类导航 -->
+  <div class="flex flex-wrap gap-2 mb-8">
+    {CATEGORIES.filter(c => c.id !== 'other').map((cat) => (
+      <a
+        href={`/categories/${cat.id}`}
+        class={`btn btn-sm ${cat.id === category.id ? 'btn-primary' : 'btn-ghost'}`}
+      >
+        {cat.icon} {cat.name} ({tools.filter(t => t.category === cat.id).length})
+      </a>
+    ))}
+  </div>
+
+  {categoryTools.length > 0 ? (
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {categoryTools.map((tool) => (
+        <ToolCard tool={tool} />
+      ))}
+    </div>
+  ) : (
+    <div class="card bg-base-100 shadow-sm p-12 text-center">
+      <div class="text-4xl mb-4">🔍</div>
+      <h3 class="text-lg font-semibold mb-2">暂无工具</h3>
+      <p class="text-sm opacity-60">该分类下还没有收录工具，敬请期待</p>
+    </div>
+  )}
+</BaseLayout>

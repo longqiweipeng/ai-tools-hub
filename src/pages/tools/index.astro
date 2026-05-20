@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { CATEGORIES } from '../../lib/config';
+import tools from '../../data/tools.json';
+
+const categories = CATEGORIES;
+const allTools = tools.sort((a, b) => b.rating - a.rating);
+---
+
+<BaseLayout title="AI 工具目录 - 发现最好用的 AI 工具">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">AI 工具目录</h1>
+    <p class="opacity-70">浏览精选 AI 工具，按分类筛选，找到最适合你的工具</p>
+  </div>
+
+  <!-- 分类筛选 -->
+  <div class="flex flex-wrap gap-2 mb-8">
+    <a href="/tools" class="btn btn-sm btn-primary">全部 ({allTools.length})</a>
+    {categories.filter(c => c.id !== 'other').map((cat) => {
+      const count = tools.filter(t => t.category === cat.id).length;
+      return (
+        <a href={`/categories/${cat.id}`} class="btn btn-sm btn-ghost">
+          {cat.icon} {cat.name} ({count})
+        </a>
+      );
+    })}
+  </div>
+
+  <!-- 搜索框 -->
+  <div class="mb-8">
+    <label class="input input-bordered flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input type="search" class="grow" placeholder="搜索 AI 工具..." id="search-input" />
+    </label>
+  </div>
+
+  <!-- 工具网格 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {allTools.map((tool) => (
+      <ToolCard tool={tool} />
+    ))}
+  </div>
+</BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      const cards = document.querySelectorAll('[class*="card"]');
+      cards.forEach((card, i) => {
+        if (i < cards.length) {
+          const text = card.textContent?.toLowerCase() || '';
+          card.closest('.grid > div, .grid > a')?.style.setProperty('display', text.includes(query) ? '' : 'none');
+        }
+      });
+    });
+  }
+</script>

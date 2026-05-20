@@ -1,0 +1,102 @@
+---
+---
+
+<div id="search-modal" class="modal">
+  <div class="modal-box max-w-2xl">
+    <h3 class="font-bold text-lg mb-4">搜索 AI 工具</h3>
+    <div id="search">
+      <input
+        type="search"
+        id="pagefind-search"
+        class="input input-bordered w-full mb-4"
+        placeholder="输入关键词搜索..."
+        autofocus
+      />
+      <div id="pagefind-results" class="max-h-96 overflow-y-auto"></div>
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-sm btn-ghost">关闭</button>
+      </form>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>关闭</button>
+  </form>
+</div>
+
+<script>
+  const searchInput = document.getElementById('pagefind-search');
+  const resultsContainer = document.getElementById('pagefind-results');
+
+  if (searchInput) {
+    let pagefind = null;
+
+    async function initPagefind() {
+      if (!pagefind) {
+        try {
+          pagefind = await import('/pagefind/pagefind.js');
+        } catch (e) {
+          console.warn('Pagefind not loaded yet, retrying...');
+          setTimeout(initPagefind, 1000);
+        }
+      }
+    }
+
+    // Load pagefind when modal opens
+    const observer = new MutationObserver(() => {
+      const modal = document.getElementById('search-modal');
+      if (modal?.open) {
+        initPagefind();
+        setTimeout(() => searchInput?.focus(), 100);
+      }
+    });
+
+    const modal = document.getElementById('search-modal');
+    if (modal) {
+      observer.observe(modal, { attributes: true, attributeFilter: ['open'] });
+    }
+
+    // Debounced search
+    let debounceTimer;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(async () => {
+        const query = searchInput.value.trim();
+        if (!query || !pagefind) {
+          resultsContainer.innerHTML = '';
+          return;
+        }
+
+        resultsContainer.innerHTML = '<div class="loading loading-spinner loading-md mx-auto block"></div>';
+
+        try {
+          const results = await pagefind.search(query);
+          if (!results || !results.results || results.results.length === 0) {
+            resultsContainer.innerHTML = '<p class="text-center opacity-50 py-8">未找到结果</p>';
+            return;
+          }
+
+          const html = await Promise.all(
+            results.results.slice(0, 10).map(async (r) => {
+              const data = await r.data();
+              const url = data.url || '#';
+              const excerpt = data.excerpt || '';
+              return `
+                <a href="${url}" class="block p-3 hover:bg-base-200 rounded-lg transition-colors border-b border-base-200 last:border-0">
+                  <div class="font-medium">${data.meta?.title || data.title || ''}</div>
+                  <div class="text-sm opacity-60 line-clamp-2">${excerpt}</div>
+                </a>
+              `;
+            })
+          );
+
+          resultsContainer.innerHTML = `<div class="space-y-1">${html.join('')}</div>`;
+        } catch (e) {
+          resultsContainer.innerHTML = '<p class="text-center opacity-50 py-8">搜索出错，请重试</p>';
+          console.error(e);
+        }
+      }, 300);
+    });
+  }
+</script>

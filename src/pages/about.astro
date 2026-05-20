@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../lib/config';
+---
+
+<BaseLayout title={`关于 ${SITE_CONFIG.name}`}>
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">关于 {SITE_CONFIG.name}</h1>
+
+    <div class="card bg-base-100 shadow-md mb-6">
+      <div class="card-body space-y-4">
+        <section>
+          <h2 class="text-xl font-semibold mb-2">我们的使命</h2>
+          <p class="opacity-70">
+            {SITE_CONFIG.name} 致力于帮助中文用户发现、评测和比较最好的 AI 工具。
+            我们相信 AI 技术应该人人可用，因此我们精选优质工具，提供客观评测和实用教程。
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold mb-2">我们的优势</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div class="bg-base-200 rounded-lg p-4">
+              <div class="text-2xl mb-2">🎯</div>
+              <h3 class="font-semibold mb-1">精选推荐</h3>
+              <p class="text-xs opacity-60">每一款工具都经过实测和评估，确保推荐质量</p>
+            </div>
+            <div class="bg-base-200 rounded-lg p-4">
+              <div class="text-2xl mb-2">📊</div>
+              <h3 class="font-semibold mb-1">客观对比</h3>
+              <p class="text-xs opacity-60">提供多维度对比，帮你找到最适合的工具</p>
+            </div>
+            <div class="bg-base-200 rounded-lg p-4">
+              <div class="text-2xl mb-2">🆕</div>
+              <h3 class="font-semibold mb-1">持续更新</h3>
+              <p class="text-xs opacity-60">每日跟踪最新 AI 工具动态，第一时间收录</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold mb-2">联系我们</h2>
+          <p class="opacity-70">
+            如果您有 AI 工具推荐或者商务合作意向，欢迎联系我们。
+          </p>
+          <a href="/submit" class="btn btn-primary btn-sm mt-2">提交工具</a>
+        </section>
+
+        <section class="bg-base-200 rounded-lg p-4">
+          <h2 class="text-sm font-semibold mb-1">联盟链接声明</h2>
+          <p class="text-xs opacity-60">
+            {SITE_CONFIG.name} 上的部分外链为联盟链接。如果您通过这些链接购买产品，
+            我们可能会获得少量佣金。这不会影响您的购买价格，也不会影响我们的评测客观性。
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

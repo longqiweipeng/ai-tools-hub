@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { CATEGORIES } from '../../lib/config';
+import { getPriceLabel } from '../../lib/utils';
+import tools from '../../data/tools.json';
+
+export async function getStaticPaths() {
+  return tools.map((tool) => ({
+    params: { slug: tool.slug },
+    props: { tool },
+  }));
+}
+
+const { tool } = Astro.props;
+const categoryInfo = CATEGORIES.find(c => c.id === tool.category);
+const relatedTools = tools
+  .filter(t => t.category === tool.category && t.slug !== tool.slug)
+  .slice(0, 3);
+---
+
+<BaseLayout title={`${tool.name} - AI 工具评测`} description={tool.description}>
+  <!-- 面包屑导航 -->
+  <div class="breadcrumbs text-sm mb-4">
+    <ul>
+      <li><a href="/">首页</a></li>
+      <li><a href="/tools">AI 工具</a></li>
+      <li>{tool.name}</li>
+    </ul>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- 左侧主要内容 -->
+    <div class="lg:col-span-2">
+      <div class="card bg-base-100 shadow-md mb-6">
+        <div class="card-body">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h1 class="text-3xl font-bold mb-2">{tool.name}</h1>
+              <div class="flex items-center gap-2">
+                <div class="rating rating-sm">
+                  {[...Array(5)].map((_, i) => (
+                    <span class={`mask mask-star-2 ${i < Math.round(tool.rating) ? 'bg-warning' : 'bg-base-300'}`} />
+                  ))}
+                </div>
+                <span class="text-sm opacity-50">{tool.rating} / 5.0</span>
+              </div>
+            </div>
+            <div class="flex gap-1">
+              {tool.isFeatured && <span class="badge badge-primary">推荐</span>}
+              {tool.isPremium && <span class="badge badge-warning">会员专属</span>}
+            </div>
+          </div>
+
+          <p class="text-base mb-6">{tool.description}</p>
+
+          <!-- 操作按钮 -->
+          <div class="flex flex-wrap gap-3 mb-6">
+            <a
+              href={tool.affiliateUrl || tool.websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary btn-lg flex-1 md:flex-none"
+            >
+              立即使用 →
+            </a>
+            <a href={tool.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
+              访问官网
+            </a>
+          </div>
+
+          <!-- 信息标签 -->
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="badge badge-lg badge-ghost">
+              {categoryInfo?.icon} {categoryInfo?.name || tool.category}
+            </span>
+            <span class="badge badge-lg badge-outline">价格：{getPriceLabel(tool.priceModel)}</span>
+            <span class="badge badge-lg badge-outline">{tool.priceInfo}</span>
+          </div>
+
+          <!-- 核心功能 -->
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-3">核心功能</h2>
+            <div class="grid grid-cols-2 gap-2">
+              {tool.features.map((feature) => (
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span class="text-sm">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- 评测摘要 -->
+          <div class="bg-base-200 rounded-lg p-5">
+            <h2 class="text-xl font-semibold mb-2">评测摘要</h2>
+            <p class="text-sm opacity-80">{tool.reviewSummary}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 联盟链接声明 -->
+      <div class="alert alert-ghost text-xs opacity-50 mb-6">
+        <span>
+          本站部分链接为联盟链接。如果您通过这些链接购买产品，我们可能会获得佣金。这不会影响您的购买价格。
+        </span>
+      </div>
+    </div>
+
+    <!-- 右侧边栏 -->
+    <div class="space-y-6">
+      <!-- 会员推广卡片 -->
+      <div class="card bg-gradient-to-br from-warning to-accent text-white shadow-md">
+        <div class="card-body">
+          <h3 class="card-title">解锁全部内容</h3>
+          <p class="text-sm opacity-90">开通会员，无广告阅读、下载专属资源</p>
+          <p class="text-2xl font-bold mt-2">¥19.9<span class="text-sm font-normal opacity-75">/月</span></p>
+          <a href="/membership" class="btn btn-sm btn-white mt-3">了解更多</a>
+        </div>
+      </div>
+
+      <!-- 相关工具 -->
+      {relatedTools.length > 0 && (
+        <div class="card bg-base-100 shadow-sm">
+          <div class="card-body">
+            <h3 class="card-title text-sm">相关工具</h3>
+            <div class="space-y-3 mt-2">
+              {relatedTools.map((rt) => (
+                <a href={`/tools/${rt.slug}`} class="flex items-center gap-3 hover:bg-base-200 p-2 rounded-lg transition-colors">
+                  <div>
+                    <p class="font-semibold text-sm">{rt.name}</p>
+                    <p class="text-xs opacity-60 line-clamp-1">{rt.description}</p>
+                    <div class="rating rating-xs mt-1">
+                      {[...Array(5)].map((_, i) => (
+                        <span class={`mask mask-star-2 ${i < Math.round(rt.rating) ? 'bg-warning' : 'bg-base-300'}`} />
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <!-- 分类列表 -->
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-sm">工具分类</h3>
+          <div class="space-y-1 mt-2">
+            {CATEGORIES.filter(c => c.id !== 'other').map((cat) => (
+              <a href={`/categories/${cat.id}`} class="block text-sm link link-hover py-1">
+                {cat.icon} {cat.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,66 @@
+---
+import { CATEGORIES } from '../lib/config';
+import { getPriceLabel } from '../lib/utils';
+
+export interface Tool {
+  name: string;
+  slug: string;
+  category: string;
+  description: string;
+  websiteUrl: string;
+  affiliateUrl: string;
+  priceInfo: string;
+  priceModel: string;
+  rating: number;
+  isFeatured: boolean;
+  isPremium: boolean;
+  features: string[];
+  reviewSummary: string;
+}
+
+interface Props {
+  tool: Tool;
+}
+
+const { tool } = Astro.props;
+const categoryInfo = CATEGORIES.find(c => c.id === tool.category);
+---
+
+<div class="card bg-base-100 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+  <div class="card-body p-5">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="card-title text-base">
+        <a href={`/tools/${tool.slug}`} class="hover:text-primary transition-colors">
+          {tool.name}
+        </a>
+      </h3>
+      <div class="flex gap-1">
+        {tool.isFeatured && <span class="badge badge-primary badge-xs">推荐</span>}
+        {tool.isPremium && <span class="badge badge-warning badge-xs">会员</span>}
+      </div>
+    </div>
+
+    <p class="text-sm opacity-70 line-clamp-2 mb-3">{tool.description}</p>
+
+    <div class="flex items-center gap-2 mb-3">
+      <div class="rating rating-xs">
+        {[...Array(5)].map((_, i) => (
+          <span class={`mask mask-star-2 ${i < Math.round(tool.rating) ? 'bg-warning' : 'bg-base-300'}`} />
+        ))}
+      </div>
+      <span class="text-xs opacity-50">{tool.rating}</span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 mt-auto">
+      <span class="badge badge-ghost badge-sm">{categoryInfo?.name || tool.category}</span>
+      <span class="badge badge-outline badge-sm">{getPriceLabel(tool.priceModel)}</span>
+    </div>
+
+    <div class="flex gap-2 mt-3">
+      <a href={`/tools/${tool.slug}`} class="btn btn-primary btn-xs flex-1">查看详情</a>
+      <a href={tool.affiliateUrl || tool.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-xs flex-1">
+        访问官网
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+---
+import { SITE_CONFIG } from '../lib/config';
+---
+
+<header class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+  <div class="container mx-auto">
+    <div class="flex-1">
+      <a href="/" class="btn btn-ghost text-xl font-bold text-primary">
+        🤖 {SITE_CONFIG.name}
+      </a>
+    </div>
+    <div class="flex-none gap-2">
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="/" class="btn btn-ghost btn-sm">首页</a>
+        <a href="/tools" class="btn btn-ghost btn-sm">AI 工具</a>
+        <a href="/blog" class="btn btn-ghost btn-sm">教程</a>
+        <a href="/about" class="btn btn-ghost btn-sm">关于</a>
+      </nav>
+      <button class="btn btn-ghost btn-square" onclick="document.getElementById('search-modal')?.showModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
+      <div class="dropdown dropdown-end">
+        <button class="btn btn-ghost md:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52">
+          <li><a href="/">首页</a></li>
+          <li><a href="/tools">AI 工具</a></li>
+          <li><a href="/blog">教程</a></li>
+          <li><a href="/about">关于</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>

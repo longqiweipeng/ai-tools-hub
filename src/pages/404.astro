@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="页面未找到">
+  <div class="flex flex-col items-center justify-center py-24">
+    <div class="text-8xl mb-6">🔍</div>
+    <h1 class="text-3xl font-bold mb-3">页面未找到</h1>
+    <p class="opacity-60 mb-6">抱歉，您要查找的页面不存在或已移动</p>
+    <div class="flex gap-3">
+      <a href="/" class="btn btn-primary">返回首页</a>
+      <a href="/tools" class="btn btn-outline">浏览工具</a>
+    </div>
+  </div>
+</BaseLayout>
