@@ -1,0 +1,37 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  pubDate?: string;
+  tags?: string[];
+  author?: string;
+}
+
+const { title, description, pubDate, tags, author } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="max-w-3xl mx-auto prose prose-lg dark:prose-invert">
+    <!-- 文章头 -->
+    <header class="not-prose mb-8">
+      <h1 class="text-3xl font-bold mb-3">{title}</h1>
+
+      <div class="flex flex-wrap items-center gap-3 text-sm opacity-60 mb-4">
+        {pubDate && <time>{pubDate}</time>}
+        {author && <span>作者：{author}</span>}
+      </div>
+
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span class="badge badge-ghost badge-sm">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <slot />
+  </article>
+</BaseLayout>

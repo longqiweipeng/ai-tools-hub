@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// 手动维护文章列表 —— 后续可改用内容集合
+const posts = [
+  {
+    slug: 'ai-writing-tools-guide',
+    title: '2025 年最好的 AI 写作工具推荐',
+    description: '深度评测 ChatGPT、Claude、Kimi 等主流 AI 写作工具，帮你找到最适合的写作助手',
+    date: '2025-05-15',
+    tags: ['文本生成', 'AI 写作', '评测'],
+  },
+  {
+    slug: 'ai-ppt-generator-comparison',
+    title: 'AI PPT 生成工具横向对比：Gamma vs 其他',
+    description: '对比 Gamma、WPS AI 等 AI PPT 工具的功能、价格和生成效果',
+    date: '2025-05-12',
+    tags: ['办公提效', 'PPT', '对比'],
+  },
+  {
+    slug: 'free-ai-tools-2025',
+    title: '2025 年免费 AI 工具大全',
+    description: '精选 10 款好用的免费 AI 工具，覆盖写作、编程、设计、视频等多个领域',
+    date: '2025-05-10',
+    tags: ['免费', '工具合集', '效率'],
+  },
+  {
+    slug: 'ai-coding-assistant-review',
+    title: 'AI 编程助手怎么选？Copilot vs Cursor vs Windsurf',
+    description: '三款主流 AI 编程助手的深度对比评测，帮你找到最适合的编码搭档',
+    date: '2025-05-08',
+    tags: ['编程', '代码', '对比'],
+  },
+  {
+    slug: 'deepseek-vs-chatgpt',
+    title: 'DeepSeek 对比 ChatGPT：谁更强？',
+    description: '国产 AI 黑马 DeepSeek 与 ChatGPT 的全面对比，包括推理、编程、中文能力',
+    date: '2025-05-05',
+    tags: ['文本生成', 'DeepSeek', 'ChatGPT', '对比'],
+  },
+];
+---
+
+<BaseLayout title="教程文章 - AI 工具箱">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-2">教程文章</h1>
+    <p class="opacity-60 mb-8">AI 工具使用教程、评测对比和行业资讯</p>
+
+    <div class="space-y-4">
+      {posts.map((post) => (
+        <a
+          href={`/blog/${post.slug}`}
+          class="card bg-base-100 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 block"
+        >
+          <div class="card-body p-6">
+            <div class="flex items-start justify-between mb-2">
+              <h2 class="card-title text-xl">{post.title}</h2>
+              <time class="text-xs opacity-50 whitespace-nowrap ml-4">{post.date}</time>
+            </div>
+            <p class="text-sm opacity-70 line-clamp-2 mb-3">{post.description}</p>
+            <div class="flex flex-wrap gap-1">
+              {post.tags.map((tag) => (
+                <span class="badge badge-ghost badge-sm">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
