@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="会员服务 - AI 工具箱">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold mb-2">会员服务</h1>
+      <p class="opacity-60">解锁全部功能，享受更好的 AI 工具探索体验</p>
+    </div>
+
+    <!-- 价格对比 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <!-- 免费 -->
+      <div class="card bg-base-100 shadow-md">
+        <div class="card-body text-center">
+          <h3 class="text-lg font-semibold">免费</h3>
+          <p class="text-3xl font-bold my-4">¥0</p>
+          <ul class="text-sm space-y-2 mb-6 text-left">
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 浏览工具目录
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 基础搜索
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 收藏工具
+            </li>
+            <li class="flex items-center gap-2 opacity-40">
+              <span>✗</span> 无广告体验
+            </li>
+            <li class="flex items-center gap-2 opacity-40">
+              <span>✗</span> PPT 模板下载
+            </li>
+            <li class="flex items-center gap-2 opacity-40">
+              <span>✗</span> 视频教程
+            </li>
+          </ul>
+          <span class="btn btn-ghost btn-sm w-full">当前计划</span>
+        </div>
+      </div>
+
+      <!-- 白银会员 -->
+      <div class="card bg-gradient-to-b from-primary to-primary/80 text-primary-content shadow-lg scale-105">
+        <div class="card-body text-center">
+          <div class="badge badge-accent badge-sm mb-2">推荐</div>
+          <h3 class="text-lg font-semibold">白银会员</h3>
+          <p class="text-3xl font-bold my-4">¥19.9<span class="text-sm font-normal opacity-75">/月</span></p>
+          <p class="text-sm opacity-80 mb-2">¥199<span class="text-xs">/年（省 40 元）</span></p>
+          <ul class="text-sm space-y-2 mb-6 text-left">
+            <li class="flex items-center gap-2">
+              <span>✓</span> 浏览工具目录
+            </li>
+            <li class="flex items-center gap-2">
+              <span>✓</span> 全部文章阅读
+            </li>
+            <li class="flex items-center gap-2">
+              <span>✓</span> 无广告体验
+            </li>
+            <li class="flex items-center gap-2">
+              <span>✓</span> 每月 5 个 PPT 模板
+            </li>
+            <li class="flex items-center gap-2 opacity-40">
+              <span>✗</span> 全部视频教程
+            </li>
+            <li class="flex items-center gap-2 opacity-40">
+              <span>✗</span> 专属社群
+            </li>
+          </ul>
+          <button class="btn btn-accent btn-sm w-full" onclick="document.getElementById('payment-modal')?.showModal()">开通会员</button>
+        </div>
+      </div>
+
+      <!-- 黄金会员 -->
+      <div class="card bg-base-100 shadow-md">
+        <div class="card-body text-center">
+          <h3 class="text-lg font-semibold">黄金会员</h3>
+          <p class="text-3xl font-bold my-4">¥49.9<span class="text-sm font-normal opacity-60">/月</span></p>
+          <p class="text-sm opacity-60 mb-2">¥499<span class="text-xs">/年（省 100 元）</span></p>
+          <ul class="text-sm space-y-2 mb-6 text-left">
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 全部白銀權益
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 不限 PPT 模板下载
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 全部视频教程
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 工具对比高级报告
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-success">✓</span> 专属会员社群
+            </li>
+          </ul>
+          <button class="btn btn-primary btn-sm w-full" onclick="document.getElementById('payment-modal')?.showModal()">开通会员</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 权益说明 -->
+    <div class="card bg-base-100 shadow-sm">
+      <div class="card-body">
+        <h2 class="text-xl font-semibold mb-4">会员权益说明</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div class="flex gap-3">
+            <span class="text-2xl">📄</span>
+            <div>
+              <h3 class="font-semibold">PPT 模板下载</h3>
+              <p class="opacity-60">AI 主题精美 PPT 模板，由我们的工具自动生成</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-2xl">🎬</span>
+            <div>
+              <h3 class="font-semibold">视频教程</h3>
+              <p class="opacity-60">AI 工具使用教程视频，快速上手各种工具</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-2xl">🚫</span>
+            <div>
+              <h3 class="font-semibold">无广告体验</h3>
+              <p class="opacity-60">浏览全站无广告干扰，专注内容</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-2xl">📊</span>
+            <div>
+              <h3 class="font-semibold">高级对比报告</h3>
+              <p class="opacity-60">多工具深度对比，辅助决策</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 支付弹窗（占位，待接入虎皮椒） -->
+    <dialog id="payment-modal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">选择支付方式</h3>
+        <div class="space-y-3">
+          <button class="btn btn-outline w-full justify-start gap-3" onclick="handlePayment('alipay')">
+            <span class="text-blue-500 text-xl">▶</span> 支付宝
+          </button>
+          <button class="btn btn-outline w-full justify-start gap-3" onclick="handlePayment('wechat')">
+            <span class="text-green-500 text-xl">▶</span> 微信支付
+          </button>
+        </div>
+        <div id="payment-error" class="text-error text-sm mt-3 hidden"></div>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn btn-ghost btn-sm">取消</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</BaseLayout>
+
+<script>
+  import { supabase } from '../lib/supabase';
+
+  async function handlePayment(method) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = '/login';
+      return;
+    }
+
+    const errorEl = document.getElementById('payment-error');
+    errorEl.classList.add('hidden');
+    errorEl.textContent = '支付功能即将上线，敬请期待！';
+    errorEl.classList.remove('hidden');
+  }
+
+  window.handlePayment = handlePayment;
+</script>
