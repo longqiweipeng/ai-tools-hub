@@ -68,11 +68,13 @@ const relatedTools = tools
               rel="noopener noreferrer"
               class="btn btn-primary btn-lg flex-1 md:flex-none"
             >
-              立即使用 →
+              {tool.affiliateUrl ? '通过此链接购买 →' : '立即使用 →'}
             </a>
-            <a href={tool.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
-              访问官网
-            </a>
+            {tool.websiteUrl && (
+              <a href={tool.websiteUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
+                访问官网
+              </a>
+            )}
             <button
               id="fav-btn"
               data-tool-id={toolId}
@@ -82,6 +84,12 @@ const relatedTools = tools
               <span id="fav-icon">🤍</span>
             </button>
           </div>
+          {tool.affiliateUrl && (
+            <div class="text-xs opacity-40 mb-4 flex items-center gap-1">
+              <span>🔗</span>
+              <span>本链接为联盟链接，您通过此链接购买我们会获得佣金，不影响您的价格</span>
+            </div>
+          )}
 
           <!-- 信息标签 -->
           <div class="flex flex-wrap gap-2 mb-6">

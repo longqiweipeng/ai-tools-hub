@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="管理后台 - AI 工具箱">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">管理后台</h1>
+
+    <div id="login-check">
+      <div class="text-center py-12 opacity-60">验证登录状态...</div>
+    </div>
+
+    <div id="admin-content" class="hidden">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <a href="/admin/submissions" class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow">
+          <div class="card-body text-center">
+            <div class="text-3xl mb-2">📥</div>
+            <h3 class="font-semibold">待审核提交</h3>
+            <p id="pending-count" class="text-sm opacity-60">加载中...</p>
+          </div>
+        </a>
+        <a href="/tools" class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow">
+          <div class="card-body text-center">
+            <div class="text-3xl mb-2">🔧</div>
+            <h3 class="font-semibold">工具管理</h3>
+            <p class="text-sm opacity-60">共 30 个工具</p>
+          </div>
+        </a>
+        <a href="/blog" class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow">
+          <div class="card-body text-center">
+            <div class="text-3xl mb-2">📝</div>
+            <h3 class="font-semibold">文章管理</h3>
+            <p class="text-sm opacity-60">5 篇教程文章</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline src="/admin-dashboard.js"></script>

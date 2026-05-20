@@ -5,11 +5,20 @@ import tools from '../data/tools.json';
 
 const featuredTools = tools.filter((t) => t.isFeatured).slice(0, 6);
 const latestTools = tools.slice(0, 8);
+
+const blogPosts = [
+  { slug: 'ai-writing-tools-guide', title: '2025 年最好的 AI 写作工具推荐' },
+  { slug: 'ai-ppt-generator-comparison', title: 'AI PPT 生成工具横向对比' },
+  { slug: 'ai-coding-assistant-review', title: 'AI 编程助手怎么选？' },
+  { slug: 'deepseek-vs-chatgpt', title: 'DeepSeek 对比 ChatGPT' },
+];
+
+const categoryNames = CATEGORIES.map(c => c.name).join('、');
 ---
 
 <BaseLayout title="AI 工具箱 - 发现最好用的 AI 工具">
   <!-- Hero Section -->
-  <section class="hero bg-gradient-to-br from-primary to-secondary text-white rounded-2xl p-12 mb-12">
+  <section class="hero hero-gradient text-white rounded-2xl p-12 mb-12 shadow-lg">
     <div class="hero-content text-center">
       <div class="max-w-2xl">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">发现最好用的 AI 工具</h1>
@@ -21,6 +30,30 @@ const latestTools = tools.slice(0, 8);
           <a href="/categories/text" class="btn btn-lg btn-outline btn-light">分类查看</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- 数据统计 -->
+  <section class="stats shadow w-full mb-12 stats-vertical md:stats-horizontal">
+    <div class="stat">
+      <div class="stat-title">收录工具</div>
+      <div class="stat-value text-primary">{tools.length}</div>
+      <div class="stat-desc">持续更新中</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">分类</div>
+      <div class="stat-value text-secondary">{CATEGORIES.length}</div>
+      <div class="stat-desc">{categoryNames}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">推荐文章</div>
+      <div class="stat-value text-accent">{blogPosts.length}</div>
+      <div class="stat-desc">AI 工具评测教程</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">推荐工具</div>
+      <div class="stat-value text-info">{tools.filter(t => t.isFeatured).length}</div>
+      <div class="stat-desc">编辑精选</div>
     </div>
   </section>
 
@@ -82,6 +115,24 @@ const latestTools = tools.slice(0, 8);
             <span class="badge badge-ghost badge-xs mt-1">
               {CATEGORIES.find(c => c.id === tool.category)?.name || tool.category}
             </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- 最新文章 -->
+  <section class="mb-12">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold">最新教程</h2>
+      <a href="/blog" class="link link-primary">查看全部 →</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {blogPosts.map((post) => (
+        <a href={`/blog/${post.slug}`} class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow">
+          <div class="card-body p-4">
+            <h3 class="font-semibold text-sm">{post.title}</h3>
+            <span class="text-xs opacity-50 mt-1">阅读更多 →</span>
           </div>
         </a>
       ))}
