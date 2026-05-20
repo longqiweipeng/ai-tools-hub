@@ -27,6 +27,7 @@
     "rating": 4.7,
     "isFeatured": true,
     "isPremium": false,
+    "videoUrl": "/videos/claude_review.mp4",
     "features": ["超长上下文", "深度分析", "代码能力", "文件上传", "安全可控"],
     "reviewSummary": "Claude 在长文档处理和分析深度方面表现突出，适合学术研究和工作报告场景。"
   },
